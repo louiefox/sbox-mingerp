@@ -26,6 +26,26 @@ Money
 	align-items: center;
 }
 
+PropInfo 
+{
+	position: absolute;
+	background-color: rgba( black, 0.5 );
+	right: 100px;
+	top: 50%;
+	font-size: 20px;
+	font-weight: bold;
+	color: white;
+	height: 80px;
+	padding: 0 20px;
+	align-items: center;
+	opacity: 0;
+
+	&.active 
+	{
+		opacity: 1;
+	}
+}
+
 CurrentTool
 {
 	position: absolute;

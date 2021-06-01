@@ -50,6 +50,7 @@ partial class SandboxGame : Game
 		ent.Position = tr.EndPos;
 		ent.Rotation = Rotation.From( new Angles( 0, owner.EyeRot.Angles().yaw, 0 ) ) * Rotation.FromAxis( Vector3.Up, 180 );
 		ent.SetModel( modelname );
+		ent.MRPOwner = owner as Player;
 
 		// Drop to floor
 		if ( ent.PhysicsBody != null && ent.PhysicsGroup.BodyCount == 1 )

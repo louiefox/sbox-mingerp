@@ -141,6 +141,19 @@ public partial class PhysGun : Carriable
 		if ( body.BodyType == PhysicsBodyType.Keyframed )
 			return;
 
+		// Prop protection
+		if ( tr.Entity.IsValid() && tr.Entity is Prop trProp && trProp.MRPOwner.IsValid() )
+		{
+			var ownerCl = GetClientOwner();
+			var entCl = trProp.MRPOwner.GetClientOwner();
+
+			if ( ownerCl != entCl ) { return; }
+		} else
+		{
+			return;
+		}
+
+
 		// Unfreeze
 		if ( body.BodyType == PhysicsBodyType.Static )
 		{

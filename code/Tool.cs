@@ -21,6 +21,24 @@ partial class Tool : Carriable
 
 	public override void Simulate( Client owner )
 	{
+		// Prop protection
+		Player ply = owner.Pawn as Player;
+
+		var tr = Trace.Ray( ply.EyePos, ply.EyePos + ply.EyeRot.Forward * 10000.0f )
+			.UseHitboxes()
+			.Ignore( ply )
+			.HitLayer( CollisionLayer.Debris )
+			.Run();
+
+		if ( tr.Entity.IsValid() && tr.Entity is Prop trProp && trProp.MRPOwner.IsValid() )
+		{
+			var ownerCl = GetClientOwner();
+			var entCl = trProp.MRPOwner.GetClientOwner();
+
+			if ( ownerCl != entCl ) { return; }
+		}
+		else return;
+
 		UpdateCurrentTool( owner );
 
 		CurrentTool?.Simulate();

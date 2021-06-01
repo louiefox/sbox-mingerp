@@ -5,7 +5,7 @@ using System;
 public partial class MoneyEntity : Prop, IUse
 {
 	[Net]
-	public int Money { get; set; }
+	public int Money { get; set; } = 1000;
 
 	public override void Spawn()
 	{
@@ -15,8 +15,6 @@ public partial class MoneyEntity : Prop, IUse
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, false );
 		Scale = 0.3f;
 		RenderColor = new Color( 0f, 1f, 0f );
-
-		Money = 1000;
 	}
 
 	public bool IsUsable( Entity user )
@@ -35,7 +33,7 @@ public partial class MoneyEntity : Prop, IUse
 			var freezeEffect = Particles.Create( "particles/money_combine.vpcf" );
 			freezeEffect.SetPos( 0, Position );
 
-			otherEnt.Delete();
+			if ( Host.IsServer ) { otherEnt.Delete(); }
 		}
 	}
 
