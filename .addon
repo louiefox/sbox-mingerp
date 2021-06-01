@@ -1,5 +1,5 @@
 {
-		"name": "Ascension",
+		"name": "Minge RP",
 		"version": "1.0",
 		"sharedassets": "*.*",
 
@@ -16,9 +16,9 @@
 		"gamemodes":
 		[
 				{
-						"name": "ascension",
-						"title": "Ascension",
-						"description": "Beat dem players and ascend."
+						"name": "mingerp",
+						"title": "Minge RP",
+						"description": "Minge init."
 				}
 		]
 }
