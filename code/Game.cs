@@ -1,55 +1,98 @@
-﻿using Sandbox;
+﻿
+using Sandbox;
+using Sandbox.UI;
+using Sandbox.UI.Construct;
 using System;
-using System.Linq;
+using System.IO;
+using System.Threading.Tasks;
 
-/// <summary>
-/// This is the heart of the gamemode. It's responsible
-/// for creating the player and stuff.
-/// </summary>
 [Library( "mingerp", Title = "Minge RP" )]
-partial class DeathmatchGame : Game
+partial class SandboxGame : Game
 {
-	DeathmatchHud DmHUD;
-	public DeathmatchGame()
+	public SandboxGame()
 	{
-		//
-		// Create the HUD entity. This is always broadcast to all clients
-		// and will create the UI panels clientside. It's accessible 
-		// globally via Hud.Current, so we don't need to store it.
-		//
 		if ( IsServer )
 		{
-			DmHUD = new DeathmatchHud();
+			// Create the HUD
+			new SandboxHud();
 		}
-
-		new ArmouryWeapon( "SMG", "dm_smg", "weapons/rust_smg/rust_smg.vmdl" );
-		new ArmouryWeapon( "Shotgun", "dm_shotgun", "weapons/rust_pumpshotgun/rust_pumpshotgun.vmdl" ) { AngleOffset = new Angles( 0, 90f, 0 ) };
-		new ArmouryWeapon( "Pistol", "dm_pistol", "weapons/rust_pistol/rust_pistol.vmdl" ) { AngleOffset = new Angles( 0, 90f, 0 ) };
-		new ArmouryWeapon( "Crossbow", "dm_crossbow", "weapons/rust_crossbow/rust_crossbow.vmdl" );
-	}
-
-	[Event.Hotload]
-	public void UpdateHUD()
-	{
-		if( !IsServer ) { return; }
-		DmHUD.Delete();
-		DmHUD = new DeathmatchHud();
-	}	
-
-	public override void PostLevelLoaded()
-	{
-		base.PostLevelLoaded();
-
-		ItemRespawn.Init();
 	}
 
 	public override void ClientJoined( Client cl )
 	{
 		base.ClientJoined( cl );
-
-		var player = new DeathmatchPlayer();
+		var player = new SandboxPlayer();
 		player.Respawn();
 
 		cl.Pawn = player;
+	}
+
+	protected override void OnDestroy()
+	{
+		base.OnDestroy();
+	}
+
+	[ServerCmd( "spawn" )]
+	public static void Spawn( string modelname )
+	{
+		var owner = ConsoleSystem.Caller?.Pawn;
+
+		if ( ConsoleSystem.Caller == null )
+			return;
+
+		var tr = Trace.Ray( owner.EyePos, owner.EyePos + owner.EyeRot.Forward * 500 )
+			.UseHitboxes()
+			.Ignore( owner )
+			.Size( 2 )
+			.Run();
+
+		var ent = new Prop();
+		ent.Position = tr.EndPos;
+		ent.Rotation = Rotation.From( new Angles( 0, owner.EyeRot.Angles().yaw, 0 ) ) * Rotation.FromAxis( Vector3.Up, 180 );
+		ent.SetModel( modelname );
+		ent.MRPOwner = owner as Player;
+
+		// Drop to floor
+		if ( ent.PhysicsBody != null && ent.PhysicsGroup.BodyCount == 1 )
+		{
+			var p = ent.PhysicsBody.FindClosestPoint( tr.EndPos );
+
+			var delta = p - tr.EndPos;
+			ent.PhysicsBody.Position -= delta;
+			//DebugOverlay.Line( p, tr.EndPos, 10, false );
+		}
+
+	}
+
+	[ServerCmd( "spawn_entity" )]
+	public static void SpawnEntity( string entName )
+	{
+		var owner = ConsoleSystem.Caller.Pawn;
+
+		if ( owner == null )
+			return;
+
+		var attribute = Library.GetAttribute( entName );
+
+		if ( attribute == null || !attribute.Spawnable )
+			return;
+
+		var tr = Trace.Ray( owner.EyePos, owner.EyePos + owner.EyeRot.Forward * 200 )
+			.UseHitboxes()
+			.Ignore( owner )
+			.Size( 2 )
+			.Run();
+
+		var ent = Library.Create<Entity>( entName );
+		if ( ent is BaseCarriable && owner.Inventory != null )
+		{
+			if ( owner.Inventory.Add( ent, true ) )
+				return;
+		}
+
+		ent.Position = tr.EndPos;
+		ent.Rotation = Rotation.From( new Angles( 0, owner.EyeRot.Angles().yaw, 0 ) );
+
+		//Log.Info( $"ent: {ent}" );
 	}
 }
