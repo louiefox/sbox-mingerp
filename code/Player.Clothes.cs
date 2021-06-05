@@ -11,10 +11,26 @@ partial class SandboxPlayer
 
 	public void Dress()
 	{
-		if ( dressed ) return;
+		if ( dressed || true ) return;
 		dressed = true;
 
-		if ( true )
+		jacket = new ModelEntity();
+		jacket.SetModel( "models/mingerp/maid_terry.vmdl" );
+		jacket.SetParent( this, true );
+		jacket.EnableShadowInFirstPerson = true;
+		jacket.EnableHideInFirstPerson = true;
+
+		var propInfo = jacket.GetModel().GetPropData();
+		if ( propInfo.ParentBodyGroupName != null )
+		{
+			SetBodyGroup( propInfo.ParentBodyGroupName, propInfo.ParentBodyGroupValue );
+		}
+		else
+		{
+			SetBodyGroup( "Chest", 0 );
+		}
+
+		/*if ( true )
 		{
 			var model = Rand.FromArray( new[]
 			{
@@ -108,6 +124,6 @@ partial class SandboxPlayer
 			hat.SetParent( this, true );
 			hat.EnableShadowInFirstPerson = true;
 			hat.EnableHideInFirstPerson = true;
-		}
+		}*/
 	}
 }

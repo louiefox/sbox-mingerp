@@ -15,6 +15,8 @@ public partial class MoneyPrinterEntity : Prop
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, false );
 
 		LastPrint = 0;
+
+		Sound.FromEntity( MingeSoundsEvents.CrazyFrog.Name, this );
 	}
 
 	[Event( "server.tick" )]

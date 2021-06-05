@@ -11,10 +11,8 @@ public partial class MoneyEntity : Prop, IUse
 	{
 		base.Spawn();
 
-		SetModel( "models/citizen_props/newspaper01.vmdl_c" );
+		SetModel( "models/mingerp/money_prop/sterling/xbusiness_money.vmdl" );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, false );
-		Scale = 0.3f;
-		RenderColor = new Color( 0f, 1f, 0f );
 	}
 
 	public bool IsUsable( Entity user )
@@ -30,8 +28,8 @@ public partial class MoneyEntity : Prop, IUse
 		{
 			Money += otherEnt.Money;
 
-			var freezeEffect = Particles.Create( "particles/money_combine.vpcf" );
-			freezeEffect.SetPos( 0, Position );
+			var combineEffect = Particles.Create( "particles/money_combine.vpcf" );
+			combineEffect.SetPos( 0, Position );
 
 			if ( Host.IsServer ) { otherEnt.Delete(); }
 		}
@@ -43,8 +41,8 @@ public partial class MoneyEntity : Prop, IUse
 		{
 			ply.Money += Money;
 
-			var freezeEffect = Particles.Create( "particles/money_pickup.vpcf" );
-			freezeEffect.SetPos( 0, Position );
+			var pickupEffect = Particles.Create( "particles/money_pickup.vpcf" );
+			pickupEffect.SetPos( 0, Position );
 
 			Delete();
 		}

@@ -25,7 +25,7 @@ public class PropInfo : Panel
 
 		if ( tr.Hit && !tr.Entity.IsWorld && tr.Entity.IsValid() )
 		{
-			if( tr.Entity is Prop trProp && trProp.MRPOwner.IsValid() )
+			if( tr.Entity is OwnableProp trProp && trProp.MRPOwner.IsValid() )
 			{
 				var entCl = trProp.MRPOwner.GetClientOwner();
 				Label.Text = $"Owner: {entCl.Name}";

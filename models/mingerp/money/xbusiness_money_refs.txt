@@ -1,5 +1,0 @@
-importfilelist
-{
-	"file"	"xbusiness_money_is_unused.vmt"
-	"file"	"no_material_is_unused.vmt"
-}

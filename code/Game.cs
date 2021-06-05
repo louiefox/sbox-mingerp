@@ -46,7 +46,7 @@ partial class SandboxGame : Game
 			.Size( 2 )
 			.Run();
 
-		var ent = new Prop();
+		var ent = new OwnableProp();
 		ent.Position = tr.EndPos;
 		ent.Rotation = Rotation.From( new Angles( 0, owner.EyeRot.Angles().yaw, 0 ) ) * Rotation.FromAxis( Vector3.Up, 180 );
 		ent.SetModel( modelname );
@@ -93,6 +93,31 @@ partial class SandboxGame : Game
 		ent.Position = tr.EndPos;
 		ent.Rotation = Rotation.From( new Angles( 0, owner.EyeRot.Angles().yaw, 0 ) );
 
+
 		//Log.Info( $"ent: {ent}" );
+	}
+
+	[ServerCmd( "bring" )]
+	public static void AdmingBring( string target )
+	{
+		var owner = ConsoleSystem.Caller.Pawn;
+
+		if ( owner == null )
+			return;
+
+		foreach ( var client in Client.All )
+		{
+			if ( client.Name.ToLower().StartsWith( target.ToLower() )  )
+			{
+				client.Pawn.Position = owner.Position + owner.Rotation.Forward * 70;
+
+				var teleportEffect = Particles.Create( "particles/admin_teleport.vpcf" );
+				teleportEffect.SetPos( 0, client.Pawn.Position + client.Pawn.Rotation.Up * 40 );
+
+				Sound.FromEntity( MingeSoundsEvents.AdminTeleport.Name, client.Pawn );
+
+				break;
+			}
+		}
 	}
 }

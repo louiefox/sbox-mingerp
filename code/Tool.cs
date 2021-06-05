@@ -30,7 +30,7 @@ partial class Tool : Carriable
 			.HitLayer( CollisionLayer.Debris )
 			.Run();
 
-		if ( tr.Entity.IsValid() && tr.Entity is Prop trProp && trProp.MRPOwner.IsValid() )
+		if ( tr.Entity.IsValid() && tr.Entity is OwnableProp trProp && trProp.MRPOwner.IsValid() )
 		{
 			var ownerCl = GetClientOwner();
 			var entCl = trProp.MRPOwner.GetClientOwner();
