@@ -11,7 +11,7 @@ public partial class MoneyEntity : Prop, IUse
 	{
 		base.Spawn();
 
-		SetModel( "models/mingerp/money_prop/sterling/xbusiness_money.vmdl" );
+		SetModel( "models/mingerp/money_prop.vmdl" );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, false );
 	}
 
