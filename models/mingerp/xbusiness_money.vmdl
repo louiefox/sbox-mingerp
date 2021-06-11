@@ -43,24 +43,6 @@
 				]
 			},
 			{
-				_class = "MaterialGroupList"
-				children = 
-				[
-					{
-						_class = "DefaultMaterialGroup"
-						remaps = 
-						[
-							{
-								from = "xbusiness_money_is_unused.vmat"
-								to = "models/mingerp/money_prop.vmat"
-							},
-						]
-						use_global_default = false
-						global_default_material = ""
-					},
-				]
-			},
-			{
 				_class = "PhysicsBodyMarkupList"
 				children = 
 				[
